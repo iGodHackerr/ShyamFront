@@ -65,7 +65,7 @@ import Verify from "./pages/Verify";
 import SearchBar from "./components/SearchBar";
 
 // Export the backend URL for other components to use
-export const backendUrl = "http://192.168.1.9:4000";
+export const backendUrl = "https://shyam-backk.vercel.app";
 
 const App = () => {
   // State for showing the login popup
