@@ -137,19 +137,17 @@
 
 // export default Product;
 
-
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { backendUrl } from "../App";
-import RelatedProduct from "../components/RelatedProduct"; // Assuming you have this component
+import RelatedProduct from "../components/RelatedProduct";
 
 const Product = () => {
-  // Use 'productId' to match the route in App.jsx
-  const { productId } = useParams(); 
-  const { products, addToCart } = useContext(ShopContext);
+  const { productId } = useParams(); // Use 'productId' to match your router
+  const { addToCart } = useContext(ShopContext);
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [mainImage, setMainImage] = useState("");
@@ -158,8 +156,8 @@ const Product = () => {
 
   useEffect(() => {
     const fetchProduct = async () => {
+      if (!productId) return;
       try {
-        // Use 'productId' in the API call
         const response = await axios.get(`${backendUrl}/api/product/get/${productId}`);
         if (response.data.success) {
           const productData = response.data.product;
@@ -170,14 +168,15 @@ const Product = () => {
             setSelectedPrice(productData.sizes[0].price);
           }
         } else {
-          toast.error("Product not found");
+          toast.error(response.data.message || "Product could not be loaded.");
         }
       } catch (error) {
-        toast.error("Error fetching product details.");
+        toast.error("An error occurred while fetching the product.");
+        console.error("Fetch Product Error:", error);
       }
     };
     fetchProduct();
-  }, [productId]); // Re-fetch if the productId changes
+  }, [productId]);
 
   const handleSizeClick = (sizeObject) => {
     setSelectedSize(sizeObject.size);
@@ -199,7 +198,7 @@ const Product = () => {
   return (
     <div>
       <div className="flex flex-col gap-8 px-4 py-10 md:px-10 lg:flex-row">
-        {/* LEFT SIDE - IMAGES */}
+        {/* Left Side - Images */}
         <div className="flex flex-col-reverse flex-1 gap-4 lg:flex-row">
           <div className="flex flex-row justify-center gap-2 lg:flex-col">
             {product?.image?.map((img, index) => (
@@ -211,7 +210,7 @@ const Product = () => {
           </div>
         </div>
 
-        {/* RIGHT SIDE - DETAILS */}
+        {/* Right Side - Details */}
         <div className="flex flex-col flex-1 gap-5">
           <h1 className="text-3xl font-bold">{product.name}</h1>
           <p className="text-2xl font-semibold text-gray-800">
@@ -219,7 +218,6 @@ const Product = () => {
           </p>
           <p className="text-sm font-light text-justify">{product.description}</p>
           
-          {/* SIZE SELECTION */}
           <div>
             <h2 className="mb-2 font-semibold">Select Size</h2>
             <div className="flex items-center gap-2">
@@ -232,7 +230,6 @@ const Product = () => {
             </div>
           </div>
 
-          {/* QUANTITY AND ADD TO CART */}
           <div className="flex items-center gap-5">
             <div className="flex items-center gap-4 text-xl">
               <button onClick={() => setQuantity((prev) => (prev > 1 ? prev - 1 : 1))} className="px-3 py-1 bg-gray-200 rounded-md">-</button>
@@ -243,10 +240,9 @@ const Product = () => {
               ADD TO CART
             </button>
           </div>
-
         </div>
       </div>
-      <RelatedProduct category={product.category} />
+      {product.category && <RelatedProduct category={product.category} />}
     </div>
   );
 };
