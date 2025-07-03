@@ -1,0 +1,53 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Prata&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+a.active hr {
+  display: block;
+}
+
+* {
+  font-family: Outfit;
+}
+
+.prata-regular {
+  font-family: "Prata", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  a.active {
+    background-color: black;
+    color: white;
+  }
+}
+
+
+/* Add these styles at the end of your file */
+
+/* Target the container for the dots */
+.slick-dots {
+  position: absolute !important; /* Override default positioning */
+  bottom: 20px !important;      /* Position 20px from the bottom of the container */
+  width: 100% !important;        /* Ensure it spans the full width for centering */
+}
+
+/* Style for the active dot */
+.slick-dots li.slick-active button:before {
+  color: white !important; /* Make the active dot white */
+  opacity: 1 !important;
+}
+
+/* Style for the inactive dots */
+.slick-dots li button:before {
+  color: white !important; /* Make all dots white to show up on the image */
+  opacity: 0.5 !important;
+  font-size: 10px !important; /* Make the dots a bit smaller */
+}
